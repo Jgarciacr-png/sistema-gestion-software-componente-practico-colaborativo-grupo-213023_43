@@ -1,5 +1,10 @@
 from datetime import datetime
 
+from excepciones import (
+    FechaInvalidaError,
+    ReservaError
+)
+
 
 class Reserva:
 
@@ -28,11 +33,14 @@ class Reserva:
     def fecha(self, nueva_fecha):
 
         try:
+
             datetime.strptime(nueva_fecha, "%Y-%m-%d")
-        except ValueError:
-            raise ValueError(
+
+        except ValueError as error:
+
+            raise FechaInvalidaError(
                 "La fecha debe tener formato YYYY-MM-DD."
-            )
+            ) from error
 
         self._fecha = nueva_fecha
 
@@ -42,7 +50,23 @@ class Reserva:
 
     def confirmar_reserva(self):
 
-        self._estado = "Confirmada"
+        try:
+
+            if self.estado == "Cancelada":
+
+                raise ReservaError(
+                    "No se puede confirmar una reserva cancelada."
+                )
+
+            self._estado = "Confirmada"
+
+        except ReservaError as error:
+
+            print(f"Error: {error}")
+
+        finally:
+
+            print("Proceso de confirmación finalizado.")
 
     def cancelar_reserva(self):
 
@@ -56,4 +80,3 @@ class Reserva:
             f"Fecha: {self.fecha}\n"
             f"Estado: {self.estado}"
         )
-        
