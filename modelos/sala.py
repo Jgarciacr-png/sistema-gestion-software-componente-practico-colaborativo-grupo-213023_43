@@ -17,7 +17,9 @@ class Sala(Servicio):
     def capacidad(self, nueva_capacidad):
 
         if nueva_capacidad <= 0:
-            raise ValueError("La capacidad debe ser mayor que cero.")
+            raise ValueError(
+                "La capacidad debe ser mayor que cero."
+            )
 
         self._capacidad = nueva_capacidad
 
@@ -30,7 +32,7 @@ class Sala(Servicio):
         return (
             f"Sala: {self.nombre}\n"
             f"Capacidad: {self.capacidad} personas\n"
-            f"Costo: ${self.calcular_costo()}"
+            f"Costo: ${self.calcular_costo():,.0f}"
         )
 
     def mostrar_info(self):

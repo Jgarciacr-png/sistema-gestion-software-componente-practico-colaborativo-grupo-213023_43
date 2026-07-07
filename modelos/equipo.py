@@ -17,7 +17,9 @@ class Equipo(Servicio):
     def tipo(self, nuevo_tipo):
 
         if not nuevo_tipo.strip():
-            raise ValueError("El tipo de equipo no puede estar vacío.")
+            raise ValueError(
+                "El tipo no puede estar vacío."
+            )
 
         self._tipo = nuevo_tipo
 
@@ -30,7 +32,7 @@ class Equipo(Servicio):
         return (
             f"Equipo: {self.nombre}\n"
             f"Tipo: {self.tipo}\n"
-            f"Costo: ${self.calcular_costo()}"
+            f"Costo: ${self.calcular_costo():,.0f}"
         )
 
     def mostrar_info(self):

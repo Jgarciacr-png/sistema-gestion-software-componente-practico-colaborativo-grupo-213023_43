@@ -1,36 +1,49 @@
+from abc import ABC, abstractmethod
+
 from modelos.entidad import Entidad
 
 
-class Servicio(Entidad):
+class Servicio(Entidad, ABC):
+    """
+    Clase abstracta que representa un servicio del sistema.
+    """
 
-    def __init__(self, id_entidad, nombre, precio):
+    def __init__(self, id_entidad, nombre, costo_base):
+
         super().__init__(id_entidad, nombre)
-        self._precio = precio
+
+        self._costo_base = costo_base
+
+    # ==========================
+    # PROPIEDADES
+    # ==========================
 
     @property
-    def precio(self):
-        return self._precio
+    def costo_base(self):
+        return self._costo_base
 
-    @precio.setter
-    def precio(self, nuevo_precio):
+    @costo_base.setter
+    def costo_base(self, nuevo_costo):
 
-        if nuevo_precio < 0:
-            raise ValueError("El precio no puede ser negativo.")
+        if nuevo_costo <= 0:
+            raise ValueError(
+                "El costo debe ser mayor que cero."
+            )
 
-        self._precio = nuevo_precio
+        self._costo_base = nuevo_costo
 
+    # ==========================
+    # MÉTODOS ABSTRACTOS
+    # ==========================
+
+    @abstractmethod
     def calcular_costo(self):
+        pass
 
-        return self._precio
-
+    @abstractmethod
     def describir_servicio(self):
+        pass
 
-        return f"Servicio: {self.nombre} - Precio: ${self.precio}"
-
+    @abstractmethod
     def mostrar_info(self):
-
-        return (
-            f"ID: {self.id_entidad}\n"
-            f"Servicio: {self.nombre}\n"
-            f"Precio: ${self.precio}"
-        )
+        pass

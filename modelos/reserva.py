@@ -1,5 +1,3 @@
-from datetime import datetime
-
 from excepciones import (
     FechaInvalidaError,
     ReservaError
@@ -7,15 +5,21 @@ from excepciones import (
 
 
 class Reserva:
+    """
+    Representa una reserva realizada por un cliente
+    para un servicio determinado.
+    """
 
     def __init__(self, cliente, servicio, fecha):
 
         self._cliente = cliente
         self._servicio = servicio
-
-        self.fecha = fecha
-
+        self._fecha = fecha
         self._estado = "Pendiente"
+
+    # ==========================
+    # PROPIEDADES
+    # ==========================
 
     @property
     def cliente(self):
@@ -29,54 +33,88 @@ class Reserva:
     def fecha(self):
         return self._fecha
 
-    @fecha.setter
-    def fecha(self, nueva_fecha):
-
-        try:
-
-            datetime.strptime(nueva_fecha, "%Y-%m-%d")
-
-        except ValueError as error:
-
-            raise FechaInvalidaError(
-                "La fecha debe tener formato YYYY-MM-DD."
-            ) from error
-
-        self._fecha = nueva_fecha
-
     @property
     def estado(self):
         return self._estado
 
+    # ==========================
+    # MÉTODOS
+    # ==========================
+
     def confirmar_reserva(self):
+        """
+        Confirma una reserva si la fecha es válida.
+        """
 
         try:
 
-            if self.estado == "Cancelada":
+            if not self.fecha.strip():
 
-                raise ReservaError(
-                    "No se puede confirmar una reserva cancelada."
+                raise FechaInvalidaError(
+                    "La fecha no puede estar vacía."
                 )
 
             self._estado = "Confirmada"
 
-        except ReservaError as error:
+        except FechaInvalidaError as error:
 
-            print(f"Error: {error}")
+            raise ReservaError(
+                f"Error al confirmar la reserva: {error}"
+            ) from error
+
+        else:
+
+            print("Reserva confirmada correctamente.")
 
         finally:
 
             print("Proceso de confirmación finalizado.")
 
     def cancelar_reserva(self):
+        """
+        Cancela una reserva previamente creada.
+        """
 
-        self._estado = "Cancelada"
+        try:
+
+            if self.estado == "Cancelada":
+
+                raise ReservaError(
+                    "La reserva ya fue cancelada."
+                )
+
+            self._estado = "Cancelada"
+
+        except ReservaError as error:
+
+            raise ReservaError(
+                f"Error al cancelar la reserva: {error}"
+            ) from error
+
+        else:
+
+            print("Reserva cancelada correctamente.")
+
+        finally:
+
+            print("Proceso de cancelación finalizado.")
 
     def mostrar_info(self):
+        """
+        Devuelve la información completa de la reserva.
+        """
 
         return (
-            f"Cliente: {self.cliente.nombre}\n"
+            f"Cliente : {self.cliente.nombre}\n"
             f"Servicio: {self.servicio.nombre}\n"
-            f"Fecha: {self.fecha}\n"
-            f"Estado: {self.estado}"
+            f"Costo   : ${self.servicio.calcular_costo():,.0f}\n"
+            f"Fecha   : {self.fecha}\n"
+            f"Estado  : {self.estado}"
         )
+
+    def __str__(self):
+        """
+        Representación en texto de la reserva.
+        """
+
+        return self.mostrar_info()

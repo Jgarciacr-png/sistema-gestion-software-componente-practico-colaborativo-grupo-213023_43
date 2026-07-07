@@ -17,7 +17,9 @@ class Asesoria(Servicio):
     def especialista(self, nuevo_especialista):
 
         if not nuevo_especialista.strip():
-            raise ValueError("El especialista no puede estar vacío.")
+            raise ValueError(
+                "El especialista no puede estar vacío."
+            )
 
         self._especialista = nuevo_especialista
 
@@ -30,7 +32,7 @@ class Asesoria(Servicio):
         return (
             f"Asesoría: {self.nombre}\n"
             f"Especialista: {self.especialista}\n"
-            f"Costo: ${self.calcular_costo()}"
+            f"Costo: ${self.calcular_costo():,.0f}"
         )
 
     def mostrar_info(self):
